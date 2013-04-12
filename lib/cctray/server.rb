@@ -61,7 +61,7 @@ module CcTray
       Nokogiri::XML(data).xpath("/Projects/Project").each do |project|
         name = project['name']
 
-        next if options.has_key?(:filter) && ! options[:filter].include?(name)
+        next if options.has_key?(:filter) && options[:filter] && ! options[:filter].include?(name)
 
         if self.projects.has_key? name
           self.projects[name].import project
