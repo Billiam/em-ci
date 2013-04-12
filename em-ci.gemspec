@@ -8,11 +8,11 @@ Gem::Specification.new do |gem|
   gem.version       = EmCi::VERSION
   gem.authors       = ["Billiam"]
   gem.email         = ["billiamthesecond@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Utility library for monitoring CI servers}
+  gem.summary       = %q{EventMachine-friendly CI server monitor}
   gem.homepage      = ""
 
-  gem.files         = `git ls-files`.split($/)
+  gem.files         = Dir["{lib}/**/*.rb", "{lib}/**/*.rake", "{lib}/**/*.yml", "LICENSE", "*.md"]
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
@@ -20,4 +20,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency('eventmachine', '~> 1.0.3')
   gem.add_dependency('em-http-request', '~> 1.0.3')
   gem.add_dependency('em-promise', '~> 1.1.1')
+  gem.add_dependency('nokogiri', '~> 1.5.9')
 end

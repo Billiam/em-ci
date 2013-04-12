@@ -22,7 +22,7 @@ module CcTray
       http.errback { deferred.reject 'request failed' }
       http.callback {
         parse http.response
-        deferred.resolve self.products
+        deferred.resolve self.projects
       }
 
       deferred.promise
@@ -34,19 +34,19 @@ module CcTray
 
     #summary methods
     def sleeping?
-      all? { |p| yield project.sleeping? }
+      all?.(&:sleeping?)
     end
 
     def building?
-      any? { |p| yield project.building? }
+      any?(&:building?)
     end
 
     def success?
-      all? { |p| yield project.success? }
+      all?(&:success?)
     end
 
     def failure?
-      any? { |p| yield project.failure? }
+      any?(&:failure?)
     end
 
     protected
@@ -58,15 +58,15 @@ module CcTray
 
     # Parse response XML, and break into projects
     def parse(data)
-      Nokogiri::XML(document).xpath("/Projects/Project").each do |project|
+      Nokogiri::XML(data).xpath("/Projects/Project").each do |project|
         name = project['name']
 
         next if options.has_key?(:filter) && ! options[:filter].include?(name)
 
-        if self.projects.has_key? project['name']
-          projects[project['name']].import project
+        if self.projects.has_key? name
+          self.projects[name].import project
         else
-          projects[project['name']] = Project.new project
+          self.projects[name] = Project.new project
         end
       end
     end
@@ -82,14 +82,14 @@ module CcTray
 
     def any? &block
       projects.each_value do |value|
-        return true if block.call
+        return true if block.call value
       end
       false
     end
 
     def all? &block
-      filtered_products.each_value do |value|
-        return false unless block.call
+      projects.each_value do |value|
+        return false unless block.call value
       end
       true
     end

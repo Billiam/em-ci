@@ -2,7 +2,7 @@ $:.unshift(File.dirname(__FILE__))
 
 require 'em-ci/version'
 require 'cctray/project'
-require 'cctray/cctray'
+require 'cctray/server'
 
 module EmCi
 
@@ -11,10 +11,9 @@ module EmCi
   end
 
   class EmCi
-    def initialize lights, url, frequency, options
-      @server = CcTray::Server url, options
-      @timer = EventMachine.add_periodic_timer frequency { run }
-      @lights = Array(lights)
+    def initialize url, frequency, options
+      @server = CcTray::Server.new url, options
+      @timer = EventMachine.add_periodic_timer(frequency) { run }
 
       @callbacks = {
         run: [],
@@ -22,9 +21,9 @@ module EmCi
     end
 
     def run
-      @server.run.then do |projects|
+      @server.run.then(proc {|projects|
         @callbacks[:run].each { |c| c.call(@server) }
-      end
+      }, proc {|message| puts message})
     end
 
     def on_run(&block)
