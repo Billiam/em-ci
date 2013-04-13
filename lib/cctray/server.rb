@@ -18,7 +18,7 @@ module CcTray
     def run
       deferred = EventMachine::Q.defer
 
-      http = request.get
+      http = request.get request_options
       http.errback { deferred.reject 'request failed' }
       http.callback {
         parse http.response
@@ -53,15 +53,14 @@ module CcTray
 
     # Generate a new request
     def request
-      EventMachine::HttpRequest.new(url, request_options)
+      EventMachine::HttpRequest.new(url)
     end
 
     # Parse response XML, and break into projects
     def parse(data)
       Nokogiri::XML(data).xpath("/Projects/Project").each do |project|
         name = project['name']
-
-        next if options.has_key?(:filter) && options[:filter] && ! options[:filter].include?(name)
+        next if options.has_key?(:filter) && !options[:filter].empty? && !options[:filter].include?(name)
 
         if self.projects.has_key? name
           self.projects[name].import project
@@ -76,7 +75,6 @@ module CcTray
       if options.has_key? :auth
         opts[:head] = { authorization: options[:auth] }
       end
-
       opts
     end
 
