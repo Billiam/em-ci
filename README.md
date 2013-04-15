@@ -1,6 +1,6 @@
-# Test
+# EmCi
 
-TODO: Write a gem description
+Event-machine friendly cctray.xml monitoring
 
 ## Installation
 
