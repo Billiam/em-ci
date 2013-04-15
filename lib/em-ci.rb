@@ -11,19 +11,26 @@ module EmCi
   end
 
   class EmCi
-    def initialize url, frequency, options
+    def initialize(url, options)
       @server = CcTray::Server.new url, options
-      @timer = EventMachine.add_periodic_timer(frequency) { run }
 
       @callbacks = {
         run: [],
       }
     end
 
+    def start(frequency)
+      run
+      @timer = EventMachine.add_periodic_timer(frequency) { run }
+    end
+
     def run
-      @server.run.then(proc {|projects|
-        @callbacks[:run].each { |c| c.call(@server) }
-      }, proc {|message| puts message})
+      @server.run.then(
+        lambda { |projects|
+          @callbacks[:run].each { |c| c.call(@server) }
+        },
+        lambda { |message| puts message }
+      )
     end
 
     def on_run(&block)

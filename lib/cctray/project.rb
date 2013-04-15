@@ -1,17 +1,18 @@
 module CcTray
   class Project
-    attr_accessor :name, :url, :time, :status, :activity
+    attr_accessor :name, :url, :time, :status, :activity, :lastBuildLabel
 
     def initialize(data)
       import(data)
     end
 
     def import(data)
-      self.name     = data['name']
-      self.url      = data['webUrl']
-      self.time     = data['lastBuildTime']
-      self.status   = data['lastBuildStatus']
-      self.activity = data['activity']
+      self.name           = data[:name]
+      self.url            = data[:webUrl]
+      self.time           = data[:lastBuildTime]
+      self.status         = data[:lastBuildStatus]
+      self.lastBuildLabel = data[:lastBuildLabel]
+      self.activity       = data[:activity]
     end
 
     def building?

@@ -1,4 +1,4 @@
-require "nokogiri"
+require "ox"
 require 'eventmachine'
 require 'em-http'
 require 'em-promise'
@@ -58,14 +58,14 @@ module CcTray
 
     # Parse response XML, and break into projects
     def parse(data)
-      Nokogiri::XML(data).xpath("/Projects/Project").each do |project|
-        name = project['name']
-        next if options.has_key?(:filter) && !options[:filter].empty? && !options[:filter].include?(name)
-
+      Ox.parse(data).locate("Projects/Project").each do |project|
+        attrs = project.attributes
+        name = attrs[:name]
+        next if options[:filter].is_a?(Array) && !options[:filter].include?(name)
         if self.projects.has_key? name
-          self.projects[name].import project
+          self.projects[name].import attrs
         else
-          self.projects[name] = Project.new project
+          self.projects[name] = Project.new attrs
         end
       end
     end

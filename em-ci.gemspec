@@ -10,15 +10,14 @@ Gem::Specification.new do |gem|
   gem.email         = ["billiamthesecond@gmail.com"]
   gem.description   = %q{Utility library for monitoring CI servers}
   gem.summary       = %q{EventMachine-friendly CI server monitor}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/billiam/em-ci"
 
   gem.files         = Dir["{lib}/**/*.rb", "{lib}/**/*.rake", "{lib}/**/*.yml", "LICENSE", "*.md"]
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
   gem.add_dependency('eventmachine', '~> 1.0.3')
   gem.add_dependency('em-http-request', '~> 1.0.3')
   gem.add_dependency('em-promise', '~> 1.1.1')
-  gem.add_dependency('nokogiri', '~> 1.5.9')
+  gem.add_dependency('ox', '~> 1.9.4')
 end
