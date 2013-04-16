@@ -1,4 +1,4 @@
-require "ox"
+require 'ox'
 require 'eventmachine'
 require 'em-http'
 require 'em-promise'
@@ -58,7 +58,13 @@ module CcTray
 
     # Parse response XML, and break into projects
     def parse(data)
-      Ox.parse(data).locate("Projects/Project").each do |project|
+      data = Ox.parse(data)
+      
+      return unless data
+
+      data = data.root if data.is_a?(Ox::Document)
+
+      data.locate('Project').each do |project|
         attrs = project.attributes
         name = attrs[:name]
         next if options[:filter].is_a?(Array) && !options[:filter].include?(name)
